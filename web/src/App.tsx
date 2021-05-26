@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import Section from './components/section'
 import SectionI from './types/section'
+import {BoardHeader} from './components/board'
 
 import './App.css'
 
@@ -20,6 +21,13 @@ export const BoardContainer = styled.div`
   padding: 5px;
   align-items: flex-start;
 `
+
+const mockboardData = {title: "Trello", id: 1}
+const mockboards = [
+  {title: "Trello", id: 1},
+  {title: "Portal", id: 2},
+  {title: "Conceirge", id: 3}
+]
 
 function App() {
   const [sections, setSections] = useState<SectionI[]>([])
@@ -58,11 +66,14 @@ function App() {
   }
 
   return (
-    <BoardContainer>
-      {sections.map((section: SectionI) => {
-        return <Section section={section} onCardSubmit={onCardSubmit}></Section>
-      })}
-    </BoardContainer>
+    <div>
+      <BoardHeader currentBoard={mockboardData} boards={mockboards}/>
+      <BoardContainer>
+        {sections.map((section: SectionI) => {
+          return <Section section={section} onCardSubmit={onCardSubmit}></Section>
+        })}
+      </BoardContainer>
+    </div>
   )
 }
 
