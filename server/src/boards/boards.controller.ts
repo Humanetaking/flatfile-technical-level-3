@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, Logger, Post } from '@nestjs/common'
 import { BoardEntity } from '../entities/Board'
 import { BoardsService } from './boards.service'
 
@@ -9,7 +9,7 @@ export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
   @Get()
-  getAllBoards(@Param() params ): Promise<BoardEntity[]> {
+  getAllBoards(): Promise<BoardEntity[]> {
     this.logger.log('GET /getAllBoards')
 
     return this.boardsService.findAllBoards()

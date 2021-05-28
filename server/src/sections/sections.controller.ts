@@ -1,4 +1,4 @@
-import { Controller, Get, Logger } from '@nestjs/common'
+import { Controller, Get, Logger, Param } from '@nestjs/common'
 
 import { SectionEntity } from '../entities/Section'
 import { SectionsService } from './sections.service'
@@ -9,10 +9,10 @@ export class SectionsController {
 
   constructor(private sectionsService: SectionsService) {}
 
-  @Get()
-  getAllSections(): Promise<SectionEntity[]> {
+  @Get(':id')
+  getAllSections(@Param() params): Promise<SectionEntity[]> {
     this.logger.log('GET /sections')
 
-    return this.sectionsService.findAll()
+    return this.sectionsService.findAll(params.id)
   }
 }

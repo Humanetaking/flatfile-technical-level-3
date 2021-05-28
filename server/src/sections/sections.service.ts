@@ -10,7 +10,14 @@ export class SectionsService {
     private sectionsRepository: Repository<SectionEntity>
   ) {}
 
-  findAll(): Promise<SectionEntity[]> {
-    return this.sectionsRepository.find({ relations: ['cards'] })
+  findAll(boardId: number): Promise<SectionEntity[]> {
+    return this.sectionsRepository.find(
+      {
+        relations: ['cards'],
+        where: condition =>{
+          condition.where('SectionEntity__cards.board_id = :boardId', { boardId: boardId})
+        }
+      }
+    )
   }
 }
