@@ -39,7 +39,7 @@ The API server is serving off of [http://localhost:3001](http://localhost:3001)
 To determine coverage for both the client and server, run:
 
 ```bash
-npm test -- --coverage`
+npm test -- --coverage
 ```
 
 ...in the respective directories.
