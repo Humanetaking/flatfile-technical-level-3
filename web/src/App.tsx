@@ -6,7 +6,10 @@ import Section from './components/section'
 import SectionI from './types/section'
 import {BoardHeader} from './components/board'
 
+import Cookies from 'universal-cookie';
+
 import './App.css'
+import { Board } from './types/board'
 
 export const BoardContainer = styled.div`
   background-color: rgb(49, 121, 186);
@@ -22,18 +25,35 @@ export const BoardContainer = styled.div`
   align-items: flex-start;
 `
 
-const mockboardData = {title: "Trello", id: 1}
-const mockboards = [
-  {title: "Trello", id: 1},
-  {title: "Portal", id: 2},
-  {title: "Conceirge", id: 3}
-]
-
 function App() {
   const [sections, setSections] = useState<SectionI[]>([])
+  const [boards, setBoards] = useState<Board[]>([])
+  const [currentBoard, setCurrentBoard] = useState<Board>()
+  const cookies = new Cookies();
+
+  const setCookie = (key: string, value: string) => {
+    cookies.set(key, value, { path: '/' });
+  }
+  
+  const getBoards = async () => {
+    const boards = await axios.get('http://localhost:3001/boards').then((response) => {
+      return response.data
+    })
+    let currentBoard = cookies.get('currentBoard')
+    if (!currentBoard) {
+      setCookie('currentBoard', boards[0])
+      currentBoard = boards[0]
+    }
+    setCurrentBoard(currentBoard)
+    setBoards(boards)
+  }
+
+  useEffect(() => {
+    getBoards();
+  }, [])
 
   const sortedSections = async () => {
-      axios.get('http://localhost:3001/sections').then((response) => {
+      axios.get('http://localhost:3001/sections/'+currentBoard?.id).then((response) => {
       // Section order is determined by ID so sort by ID
       const result = response.data.sort((a: SectionI, b: SectionI) => a.id - b.id)
       setSections(result)
@@ -42,7 +62,7 @@ function App() {
 
   useEffect(() => {
     sortedSections();
-  }, []);
+  }, [currentBoard?.id]);
 
   const onCardSubmit = (sectionId: number, title: string) => {
     axios({
@@ -67,7 +87,7 @@ function App() {
 
   return (
     <div>
-      <BoardHeader currentBoard={mockboardData} boards={mockboards}/>
+      <BoardHeader currentBoard={currentBoard} boards={boards}/>
       <BoardContainer>
         {sections.map((section: SectionI) => {
           return <Section section={section} onCardSubmit={onCardSubmit}></Section>

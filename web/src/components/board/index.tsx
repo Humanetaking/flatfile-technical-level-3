@@ -40,11 +40,24 @@ const BoardSelector = styled.div`
   padding: 10px;
 `;
 
-export const BoardHeader = ({currentBoard, boards}: any) => {
-    console.log(currentBoard)
+type BoardHeaderType = {
+  currentBoard?: Board,
+  boards: Board[]
+}
+
+export const BoardHeader = ({currentBoard, boards}: BoardHeaderType) => {
     const options = boards.map((element: { id: number; title: string; }) => ({
         "value": element.id, "label": element.title
     }));
+
+    const setBoardChange = ({value}: any) => {
+      let boardId = value
+      boards.forEach(board => {
+        if(boardId == board.id){
+          currentBoard = board
+        }
+      })
+    }
     return (
         <StyledBoardHeader>
             <LeftQueue>
@@ -54,6 +67,7 @@ export const BoardHeader = ({currentBoard, boards}: any) => {
                         label="Board"
                         options={options}
                         isSearchable={false}
+                        onChange={(value) => setBoardChange(value)}
                     />
                 </BoardSelector>
             </LeftQueue>
