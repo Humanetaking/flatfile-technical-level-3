@@ -14,15 +14,15 @@ export class BoardsService {
     return this.boardsRepository.find()
   }
 
-  createBoard({ title }: {title: string }): Promise<BoardEntity> {
-    const titleExists = this.boardsRepository.find({ title: title})
-    if (titleExists) {
-      throw new Error("Board name already exists: " + title)
-    }
-    else {
+  async createBoard({ title }: {title: string }): Promise<BoardEntity> {
+    const titleExists = await this.boardsRepository.find({ title: title})
+    if (titleExists.length == 0) {
       let board = new BoardEntity()
       board.title = title
       return this.boardsRepository.save(board)
+    }
+    else {
+      throw new Error("Board name already exists: " + title)
     }
   }
 }

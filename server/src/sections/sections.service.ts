@@ -27,7 +27,7 @@ export class SectionsService {
     
     sections.forEach(section => {
       section["cards"] = []
-      sectionsWithCards.every(sectionWithCards => {
+      sectionsWithCards.forEach(sectionWithCards => {
         if (sectionWithCards.id == section.id) {
           section["cards"] = sectionWithCards.cards
         }
