@@ -21,13 +21,13 @@ At Flatfile we [value work/life balance](https://flatfile.io/careers/). This ass
 To start the application, run the following:
 
 ```bash
-docker compose up -d
+docker-compose up -d
 ```
 
 To view the application logs, run the following:
 
 ```bash
-docker compose logs -f
+docker-compose logs -f
 ```
 
 The web application is serving off of [http://localhost:3000](http://localhost:3000)
@@ -39,7 +39,7 @@ The API server is serving off of [http://localhost:3001](http://localhost:3001)
 To determine coverage for both the client and server, run:
 
 ```bash
-npm test -- --coverage`
+npm test -- --coverage
 ```
 
 ...in the respective directories.
