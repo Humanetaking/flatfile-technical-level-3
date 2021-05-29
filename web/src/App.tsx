@@ -26,9 +26,10 @@ export const BoardContainer = styled.div`
 `
 
 function App() {
+  const emptyBoard = {id: 0, title: ""}
   const [sections, setSections] = useState<SectionI[]>([])
   const [boards, setBoards] = useState<Board[]>([])
-  const [currentBoard, setCurrentBoard] = useState<Board>()
+  const [currentBoard, setCurrentBoard] = useState<Board>(emptyBoard)
   const cookies = new Cookies();
 
   const setCookie = (key: string, value: string) => {
@@ -48,9 +49,22 @@ function App() {
     setBoards(boards)
   }
 
+  let refreshBoardVar = 0
+  const addBoard = (title: string) => {
+    axios({
+      method: 'post',
+      url: 'http://localhost:3001/boards',
+      data: { title },
+
+    }).then((response) => {
+      // Ideally, we would want to refetch but we'd see cors error locally atm
+      refreshBoardVar += 1
+    })
+  }
+
   useEffect(() => {
     getBoards();
-  }, [])
+  }, [refreshBoardVar])
 
   const sortedSections = async () => {
       axios.get('http://localhost:3001/sections/'+currentBoard?.id).then((response) => {
@@ -64,11 +78,11 @@ function App() {
     sortedSections();
   }, [currentBoard?.id]);
 
-  const onCardSubmit = (sectionId: number, title: string) => {
+  const onCardSubmit = (boardId: number, sectionId: number, title: string) => {
     axios({
       method: 'post',
       url: 'http://localhost:3001/cards',
-      data: { sectionId, title }
+      data: { boardId, sectionId, title }
     }).then((response) => {
       let sectionsClone: SectionI[] = [...sections]
       for (let i = 0; i < sectionsClone.length; i++) {
@@ -77,7 +91,8 @@ function App() {
           section.cards.push({
             id: response.data.id,
             title: response.data.title,
-            section_id: sectionId
+            section_id: sectionId,
+            board_id: boardId
           })
           setSections(sectionsClone)
         }
@@ -87,10 +102,15 @@ function App() {
 
   return (
     <div>
-      <BoardHeader currentBoard={currentBoard} boards={boards}/>
+      <BoardHeader
+        addBoard={addBoard}
+        currentBoard={currentBoard}
+        setCurrentBoard={setCurrentBoard}
+        boards={boards}
+      />
       <BoardContainer>
         {sections.map((section: SectionI) => {
-          return <Section section={section} onCardSubmit={onCardSubmit}></Section>
+          return <Section section={section} onCardSubmit={onCardSubmit} currentBoard={currentBoard}></Section>
         })}
       </BoardContainer>
     </div>

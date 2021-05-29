@@ -19,13 +19,16 @@ import {
   Wrapper
 } from './styled-components'
 import CardI from '../../types/card'
+import { Board } from '../../types/board'
 
 const Section = ({
-  section: { id, title, cards },
-  onCardSubmit
+  section: { id: sectionId, title, cards },
+  onCardSubmit,
+  currentBoard
 }: {
   section: SectionI
   onCardSubmit: Function
+  currentBoard: Board
 }) => {
   const [isTempCardActive, setIsTempCardActive] = useState(false)
   const [cardText, setCardText] = useState('')
@@ -62,7 +65,7 @@ const Section = ({
                   e.preventDefault()
 
                   if (cardText) {
-                    onCardSubmit(id, cardText)
+                    onCardSubmit(currentBoard.id, sectionId, cardText)
                   }
 
                   setIsTempCardActive(false)
