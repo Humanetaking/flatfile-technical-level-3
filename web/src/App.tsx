@@ -49,22 +49,22 @@ function App() {
     setBoards(boards)
   }
 
-  let refreshBoardVar = 0
   const addBoard = (title: string) => {
     axios({
       method: 'post',
       url: 'http://localhost:3001/boards',
       data: { title },
-
+      headers: {"Access-Control-Allow-Origin": "*"}
     }).then((response) => {
-      // Ideally, we would want to refetch but we'd see cors error locally atm
-      refreshBoardVar += 1
+      //handle the error returned here if the name isn't unique, maybe make a toast
+      boards.push(response.data)
+      setCurrentBoard(response.data)
     })
   }
 
   useEffect(() => {
     getBoards();
-  }, [refreshBoardVar])
+  }, [])
 
   const sortedSections = async () => {
       axios.get('http://localhost:3001/sections/'+currentBoard?.id).then((response) => {
@@ -82,7 +82,8 @@ function App() {
     axios({
       method: 'post',
       url: 'http://localhost:3001/cards',
-      data: { boardId, sectionId, title }
+      data: { boardId, sectionId, title },
+      headers: {"Access-Control-Allow-Origin": "*"}
     }).then((response) => {
       let sectionsClone: SectionI[] = [...sections]
       for (let i = 0; i < sectionsClone.length; i++) {

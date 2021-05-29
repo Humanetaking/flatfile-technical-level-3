@@ -22,9 +22,9 @@ import CardI from '../../types/card'
 import { Board } from '../../types/board'
 
 const Section = ({
-  section: { id: sectionId, title, cards },
+  section,
   onCardSubmit,
-  currentBoard
+  currentBoard,
 }: {
   section: SectionI
   onCardSubmit: Function
@@ -37,11 +37,11 @@ const Section = ({
     <Wrapper>
       <WrappedSection>
         <SectionHeader>
-          <SectionTitle>{title}</SectionTitle>
+          <SectionTitle>{section.title}</SectionTitle>
         </SectionHeader>
         <CardsContainer>
-          {cards.length &&
-            cards.map((card: CardI) => {
+          {section.cards.length &&
+            section.cards.map((card: CardI) => {
               return <Card key={card.id} card={card}></Card>
             })}
         </CardsContainer>
@@ -65,7 +65,7 @@ const Section = ({
                   e.preventDefault()
 
                   if (cardText) {
-                    onCardSubmit(currentBoard.id, sectionId, cardText)
+                    onCardSubmit(currentBoard.id, section.id, cardText)
                   }
 
                   setIsTempCardActive(false)

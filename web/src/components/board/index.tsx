@@ -33,6 +33,7 @@ export const BoardHeader = ({addBoard, currentBoard, setCurrentBoard, boards}: B
     }));
 
     const setBoardChange = ({value}: any) => {
+      let boardId = value
       boards.forEach(board => {
         if(value == board.id){
           setCurrentBoard(board)
