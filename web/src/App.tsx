@@ -24,13 +24,17 @@ export const BoardContainer = styled.div`
 function App() {
   const [sections, setSections] = useState<SectionI[]>([])
 
-  useEffect(() => {
-    axios.get('http://localhost:3001/sections').then((response) => {
+  const sortedSections = async () => {
+      axios.get('http://localhost:3001/sections').then((response) => {
       // Section order is determined by ID so sort by ID
-      const sortedSections = response.data.sort((a: SectionI, b: SectionI) => a.id - b.id)
-      setSections(sortedSections)
-    })
-  })
+      const result = response.data.sort((a: SectionI, b: SectionI) => a.id - b.id)
+      setSections(result)
+      })
+    }
+
+  useEffect(() => {
+    sortedSections();
+  }, []);
 
   const onCardSubmit = (sectionId: number, title: string) => {
     axios({
